@@ -4,6 +4,7 @@ import org.apache.commons.dbutils.DbUtils;
 import pl.knpj.servlet.config.Config;
 
 import java.sql.*;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 public abstract class BaseDAO {
 
     private static final Logger LOGGER = Logger.getLogger(BaseDAO.class.getName());
+//    private ConsoleHandler consoleHandler = new ConsoleHandler();
     private final Config config = Config.getInstance();
 
     private Connection makeConnection() throws SQLException, ClassNotFoundException {
@@ -24,6 +26,7 @@ public abstract class BaseDAO {
                         config.getProperty("db.user"),
                         config.getProperty("db.password")
                 );
+        LOGGER.log(Level.INFO, "Connection to database established");
         return res;
     }
 
@@ -42,6 +45,7 @@ public abstract class BaseDAO {
         ResultSet rs = null;
 
         try {
+//            LOGGER.entering();
             con = makeConnection();
             stmt = con.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
@@ -56,7 +60,7 @@ public abstract class BaseDAO {
         } catch (SQLException e) {
             e.printStackTrace();
 
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, "");
 
             throw e;
         } catch (ClassNotFoundException e) {
@@ -66,6 +70,7 @@ public abstract class BaseDAO {
             DbUtils.closeQuietly(rs);
             DbUtils.closeQuietly(stmt);
             DbUtils.closeQuietly(con);
+            LOGGER.fine("Connections closed");
         }
     }
 

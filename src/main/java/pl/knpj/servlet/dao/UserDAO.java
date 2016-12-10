@@ -4,11 +4,15 @@ import pl.knpj.servlet.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DAO class for retrieving data from vuser table
  */
 public class UserDAO extends BaseDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     private static final String ID_COLUMN = "id";
     private static final String USERNAME_COLUMN = "username";
@@ -40,6 +44,7 @@ public class UserDAO extends BaseDAO {
     public boolean isUsernameMatchingPassword(String username, String password) throws SQLException, ClassNotFoundException {
         User user = getUserByUsername(username);
         if (user == null) {
+            LOGGER.log(Level.WARNING, "User " + username + " not found");
             return false;
         }
 
@@ -51,6 +56,7 @@ public class UserDAO extends BaseDAO {
      */
     protected Object parseResultSet(ResultSet rs) throws SQLException {
         if (!rs.next()) {
+            LOGGER.log(Level.WARNING, UserDAO.class.getName() + ".parseResultSet: ResultSet is empty");
             return null;
         }
 
