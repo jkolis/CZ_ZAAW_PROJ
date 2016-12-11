@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 /**
  * Login servlet for handling login requests.
@@ -19,6 +20,8 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/login.do")
 public class LoginServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("login");
@@ -26,6 +29,7 @@ public class LoginServlet extends HttpServlet {
         UserDAO dao = new UserDAO();
         try {
             if (!dao.isUsernameMatchingPassword(username, password)) {
+                LOGGER.warning("Wrong password for user: " + username);
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println("Unauthorized!");
             } else {
@@ -35,6 +39,7 @@ public class LoginServlet extends HttpServlet {
 
                 if (session.isNew()) {
                     session.setAttribute("user", user);
+                    LOGGER.fine("Attribute \"user\": " + user + " added to session " + req.getSession().getId());
                 }
 
                 req.setAttribute("username", "Ala ma kota :)");

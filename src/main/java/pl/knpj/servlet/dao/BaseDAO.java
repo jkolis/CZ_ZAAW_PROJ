@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public abstract class BaseDAO {
 
     private static final Logger LOGGER = Logger.getLogger(BaseDAO.class.getName());
-//    private ConsoleHandler consoleHandler = new ConsoleHandler();
     private final Config config = Config.getInstance();
 
     private Connection makeConnection() throws SQLException, ClassNotFoundException {
